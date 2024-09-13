@@ -1,18 +1,30 @@
 document.getElementById('form').addEventListener('submit', function (e) {
     e.preventDefault();
 
+
     //Informações
     let tamParTrancado = 25;
     let portasPachPanel = 24;
 
     // Coletando os dados de entrada
-    const numPavimentos = document.getElementById('numPavimentos').value;
-    const pontosTelecomPavimento = document.getElementById('ptsTelecomPorPavimento').value;
-    const PtsVoIPPavimento = document.getElementById('ptsVoIPPorPavimento').value;
-    const peDireito = document.getElementById('peDireito').value;
+    let pontosTelecomPavimento = document.getElementById('ptsTelecomPorPavimento').value;
+    let PtsVoIPPavimento = document.getElementById('ptsVoIPPorPavimento').value;
+
+    let quantidadeBackbonePrimario = document.getElementById('quantidadeBackbonePrimario').value;
+    let paresFibras= document.getElementById('paresFibraDisponiveisPrimario').value;
+    let distanciaSEQ = document.getElementById('distanciaSEQs').value;
+
+    let numPavimentos = document.getElementById('numPavimentos').value;
+    let peDireito = document.getElementById('peDireito').value;
+    let quantidadeBackboneSecundario = document.getElementById('quantidadeBackboneSecundario').value;
+    let paresFibraDisponiveisSecundario = document.getElementById('paresFibraDisponiveisSecundario').value;
+
 
     //CABO UTP
     //Cálculo dos pontos de rede
+    if(numPavimentos == 0){
+        numPavimentos = 1;
+    }
     let pontosTelecomTotal = pontosTelecomPavimento * numPavimentos;
     let pontosRede = pontosTelecomTotal * 2;
 
@@ -40,6 +52,19 @@ document.getElementById('form').addEventListener('submit', function (e) {
     let pachCableAmarelo = 0;
 
     //BACKBONE OPTICO
+    let paresTotal = paresFibraDisponiveisSecundario * quantidadeBackbonePrimario;
+    let tamanhoTotal = (distanciaSEQ * 1.2) * quantidadeBackbonePrimario;
+    let  quantidadeDIO = Math.ceil((paresTotal / 2) / 24) * 2;
+    let bandejaEmendaFibraDio = (Math.ceil((paresTotal * 2) / 12) * 2);
+    let acoplador = paresTotal * 2;
+    let pigTail = paresTotal * 2 * 2;
+    let cordaoOptico = paresTotal * 2;
+
+
+    //Backbone primario
+
+
+
     //Cabo de Fibra Óptica Tight Buffer (FOMMIG) 50 x 125µm - com 8 fibras	
     let caboFibra = 0;
 
@@ -61,9 +86,6 @@ document.getElementById('form').addEventListener('submit', function (e) {
     //Cordão óptico 50 x 125µm - 3m - duplo -conector LC
     let cordaoOpticoMM = 0;
     let cordaoOpticoSM = 0;
-
-    //Outros
-    let bandejaEmendaFibraDio = 0;
 
     //MISCELANEA
     //Etiquetas de identificação
@@ -245,6 +267,6 @@ document.getElementById('form').addEventListener('submit', function (e) {
         </table>
     `;
 
-    // Exibindo o resultado na página
     document.getElementById('result').innerHTML = resultTable;
+
 });
