@@ -37,48 +37,43 @@ document.getElementById('form').addEventListener('submit', function (e) {
     //Patch panel
     let pachPanel = Math.ceil(pontosRede / portasPachPanel);
 
-    //Tamanho Rack
-    let quantidadeRack = 0;
-    let tamanhoRack = 0;
-    let bandejas = 0;
-    let exaustor = quantidadeRack;
+    //Patch Cord
+    let patchCordAzul = pontosRede;
 
     //Outros
     let organizadoresFrontais = pachPanel * 2;
 
     //Pach cables
-    let patchCableAzul = 0;
-    let pachCableAmarelo = 0;
+    let patchCableAzul = pontosRede;
+    let pachCableAmarelo = Math.ceil(pontosRede * 0.5);
+
+    
+    //Tamanho Rack
+    let tamanhoRack = pachPanel + organizadoresFrontais;
+    let quantidadeRack = Math.ceil(tamanhoRack/36)
+    let bandejas = quantidadeRack * 2;
+    let exaustor = quantidadeRack;
+
+    tamanhoRack = (tamanhoRack + bandejas + exaustor) * 1.5;
+    quantidadeRack = Math.ceil(tamanhoRack/36)
+
 
     //BACKBONE OPTICO
     if (PtsVoIPPavimento !=0)paresFibra++;
     if(PtsCameraPavimento)paresFibra++;
 
-    if(paresFibra<=4){
-        
-    }
-
-
-    let tamanhoTotal = (distanciaSEQ * 1.2) * quantidadeBackbone;
-    let bandejaEmendaFibraDio = (Math.ceil((paresFibra * 2) / 12) * 2);
-    let acoplador = paresFibra * 2;
-    let pigTail = paresFibra * 2 * 2;
-    let cordaoOptico = paresFibra * 2;
-
-
     //DIO
-    let qntDio;
-    if(paresFibra <=4) qntDio = 0;
-    else qntDio = Math.ceil((paresFibra*2)/24);
-
+    let qntDio = Math.ceil(numPavimentos/2);
+    let caixasEmenda = qntDio * 2;
 
 
     //Chassi DIO com 24 portas - 1U - 19"
-    let ChassiDIO = 0;
+    let ChassiDIO = Math.ceil(paresFibra / 24); // Um chassi para cada 24 portas
+
 
     //Acoplador óptico
-    let acopladorMM = 0;
-    let acopladorSM = 0;
+    let acopladorSM = Math.ceil(paresFibra / 8); // Um acoplador para cada 8 fibras
+
 
     //Terminador óptico para 8 fibras
     let terminadorOptico;
@@ -86,13 +81,15 @@ document.getElementById('form').addEventListener('submit', function (e) {
     else terminadorOptico = Math.ceil(paresFibra/8);
 
     //Pig tail 50 x 125µm - Conector LC
-    let pigTailMMSimples = 0;
-    let pigTailMMDuplo = 0;
-    let pigTailSMSimples = 0;
+    let pigTailMMSimples = paresFibra * numPavimentos;
 
     //Cordão óptico 50 x 125µm - 3m - duplo -conector LC
-    let cordaoOpticoMM = 0;
-    let cordaoOpticoSM = 0;
+    let cordaoOptico = paresFibra * 2; // Dois cordões por par de fibra
+
+    //outros
+    let capacidadeBandeja = 12; // Capacidade da bandeja de emenda
+    let bandejaEmendaFibraDio = Math.ceil(paresFibra / capacidadeBandeja);
+
 
     //MISCELANEA
     //Etiquetas de identificação
@@ -100,19 +97,20 @@ document.getElementById('form').addEventListener('submit', function (e) {
     let etiquetaPortaPachCable = pontosRede * 2;
     let etiquetaTomadaEspelho = tomadaRj45Femea + espelhos4x4;
     let etiquetasCabosUTP = pontosRede * 2;
-    let etiquetaCordoesPigtail = 0;
-    let etiquetaPortaDIO = 0;
+    let etiquetaCordoesPigtail = pigTailMMSimples; 
+    let etiquetaPortaDIO = qntDio * 24; // Supondo que cada DIO tenha 24 portas
 
     //abraçadeira
-    let abracadeiraPlastica = 0;
-    let abracadeiraVelcro = 0;
+    let abracadeiraPlastica = pontosRede;
+    let abracadeiraVelcro = pontosRede;
+
 
     //reguas
-    let regua6Tomadas = 0;
-    let reguaFechamento = 0;
+    let regua6Tomadas = Math.ceil(pontosRede / 6); // Uma régua para cada 6 pontos de rede
+    let reguaFechamento = quantidadeRack;
 
     //outros
-    let porcaGaiola = 0;
+    let porcaGaiola = Math.ceil(quantidadeRack / 10);
 
 
     // Gerando o resultado para exibir na página como tabela
@@ -141,13 +139,9 @@ document.getElementById('form').addEventListener('submit', function (e) {
                 </tr>
                 <tr>
                     <td>Patch Cord cat.6, azul, 3m</td>
-                    <td></td>
+                    <td>${patchCordAzul} unidades</td>
+                </tr>
 
-                </tr>
-                <tr>
-                    <td>Patch Cord cat.5, branco, 1m</td>
-                    <td></td>
-                </tr>
                 <tr>
                     <td>Patch Panel cat.6, 24 portas</td>
                     <td>${pachPanel} unidades</td>
@@ -163,10 +157,6 @@ document.getElementById('form').addEventListener('submit', function (e) {
                 <tr>
                     <td>Patch Cable cat.6, azul - 2,5m</td>
                     <td>${patchCableAzul} unidades</td>
-                </tr>
-                <tr>
-                    <td>Patch Cable cat.6, vermelho - 2,5m</td>
-                    <td></td>
                 </tr>
                 <tr>
                     <td>Patch Cable cat.6, amarelo - 2,5m</td>
@@ -194,8 +184,8 @@ document.getElementById('form').addEventListener('submit', function (e) {
                     <td>${ChassiDIO} unidades</td>
                 </tr>
                 <tr>
-                    <td>Acoplador óptico 50 x 125µm - MM - LC - duplo  </td>
-                    <td>${acopladorMM} unidades</td>
+                    <td>Acessórios: caixa de emenda ou bandeja de emenda (12 fibras), Protetores de emenda, abraçadeiras plásticas.</td>
+                    <td>${caixasEmenda} unidades</td>
                 </tr>
                 <tr>
                     <td>Acoplador óptico 9 x 125µm - SM - LC - duplo  </td>
@@ -214,20 +204,8 @@ document.getElementById('form').addEventListener('submit', function (e) {
                     <td>${pigTailMMSimples} unidades</td>
                 </tr>
                 <tr>
-                    <td>Pig tail 50 x 125µm - MM - 3,0m - duplo - conector LC</td>
-                    <td>${pigTailMMDuplo} unidades</td>
-                </tr>
-                <tr>
-                    <td>Cordão Óptico 50 x 125µm - MM - 3m - duplo - conector LC</td>
-                    <td>${cordaoOpticoMM} unidades</td>
-                </tr>
-                <tr>
-                    <td>Pig tail 50 x 125µm - SM - 1,5m - simples - conector LC</td>
-                    <td>${pigTailSMSimples} unidades</td>
-                </tr>
-                <tr>
-                    <td>Cordão Óptico 9 x 125µm - SM - 3m - duplo - conector LC</td>
-                    <td>${cordaoOpticoSM} unidades</td>
+                    <td>Cordão Óptico 9 x 125µm - 3m - duplo - conector LC</td>
+                    <td>${cordaoOptico} unidades</td>
                 </tr>
 
                 
