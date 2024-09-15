@@ -16,9 +16,21 @@
             <label for="ptsTelecomPorPavimento">Número de pontos de telecom por Pavimento:</label>
             <input type="number" id="ptsTelecomPorPavimento">
 
-            <label for="ptsVoIPPorPavimento">Número de rede VoIP por Pavimento:</label>
+            <label for="ptsVoIPPorPavimento">Número de redes VoIP total:</label>
             <input type="number" id="ptsVoIPPorPavimento">
 
+            <label for="ptsCameraPorPavimento">Número de câmeras total:</label>
+            <input type="number" id="ptsCameraPorPavimento">
+
+            <div class="col-md-4">
+                <label for="pavimentos" class="form-label">Número de pavimentos</label>
+                <input type="number" class="form-control" id="numPavimentos" name="pavimentos" value="1" required>
+            </div>
+
+            <div class="col-md-4">
+                <label for="pe-direito" class="form-label">Tamanho do pé-direito</label>
+                <input type="number" class="form-control" id="peDireito" name="pe-direito" value="1" required>
+            </div>
 
             <div class="perguntaBackbonePrimario">
                 <p>Possui backbone primário?</p>
@@ -35,27 +47,41 @@
             <div class="container row g-3 hidden" id="container-backbone-primario">
                 <h1>Backbone primário</h1>
                 <div class="col-md-6">
-                    <label for="caracteristicas-primario">Características da fibra óptica</label>
-                    <select class="form-select" id="caracteristicas-primario" name="caracteristicas-primario">
-                        <option value="1">Fibra Óptica Multimodo (FOMMIG) 50 x 125µm 850nm</option>
-                        <option value="2">Fibra Óptica Multimodo (FOMMIG) 50 x 125µm 1310nm</option>
-                        <option value="3" selected>Fibra Óptica Monomodo (FOSMIG) 9 x 125µm 1310nm</option>
-                        <option value="4">Fibra Óptica Monomodo (FOSMIG) 9 x 125µm 1550nm</option>
-                    </select>
+                    <label for="taxa">Taxa de transmissão:
+                        <select id="taxa" name="taxa" required>
+                            <option value="100MG">100Mgbps</option>
+                            <option value="250MG">250Mgbps</option>
+                            <option value="500MG">500Mgbps</option>
+                            <option value="1G">1Ggbps</option>
+                            <option value="10G">10Ggbps</option>
+                        </select>
+                    </label>
                 </div>
+
+                <div class="container row g-3 hidden" id="container-backbone-primario">
+
+                <label for="tipoConector">Conector:
+                    <select value="24" id="tipoConector" name="tipoConector" required>
+                        <option value="lc">Conector LC</option>
+                        <option value="sc">Conector SC</option>
+                        <option value="fc">Conector FC</option>
+                    </select>
+                </label>
+                </div>
+
                 <div class="col-md-6">
-                    <label for="backbone-primario">Quantidade de Backbone</label>
-                    <input type="number" class="form-control" id="quantidadeBackbonePrimario" name="backbone-primario" value="1"
+                    <label for="backbone-primario">Quantidade de Backbone total</label>
+                    <input type="number" class="form-control" id="quantidadeBackbone" name="backbone-primario" value="1"
                         required>
                 </div>
                 <div class="col-md-6">
-                    <label for="disponivel-primario">Número de pares de fibra disponíveis</label>
-                    <input type="number" class="form-control" id="paresFibraDisponiveisPrimario" name="disponivel-primario"
+                    <label for="disponivel-primario">Número de pares de fibra disponíveis total</label>
+                    <input type="number" class="form-control" id="paresFibraDisponiveis" name="disponivel-primario"
                         value="4" required>
                 </div>
                 <div class="col-md-6">
                     <label for="distancia">Distância entre as SEQs (em metros)</label>
-                    <input type="number" class="form-control" id="distanciaSEQs" name="distancia" value="1000" required>
+                    <input type="number" class="form-control" id="distanciaSEQs" name="distancia" value="1" required>
                 </div>
             </div>
 
@@ -68,39 +94,6 @@
                 <div>
                     <input type="radio" id="possui-secundario-nao" name="possui-secundario" value="0" checked>
                     <label for="possui-secundario-nao">Não</label>
-                </div>
-            </div>
-            
-            <div class="container row g-3 hidden" id="container-backbone-secundario">
-                <h1>Backbone secundário</h1>
-                <div class="col-md-4">
-                    <label for="pavimentos" class="form-label">Número de pavimentos</label>
-                    <input type="number" class="form-control" id="numPavimentos" name="pavimentos" value="4" required>
-                </div>
-                <div class="col-md-4">
-                    <label for="pe-direito" class="form-label">Tamanho do pé-direito</label>
-                    <input type="number" class="form-control" id="peDireito" name="pe-direito" value="5" required>
-                </div>
-                <div class="col-md-4">
-                    <label for="caracteristicas-secundario" class="form-label">Características da fibra
-                        óptica</label>
-                    <select class="form-select" id="caracteristicas-secundario" name="caracteristicas-secundario">
-                        <option value="1">Fibra Óptica Multimodo (FOMMIG) 50 x 125µm 850nm</option>
-                        <option value="2" selected>Fibra Óptica Multimodo (FOMMIG) 50 x 125µm 1310nm</option>
-                        <option value="3">Fibra Óptica Monomodo (FOSMIG) 9 x 125µm 1310nm</option>
-                        <option value="4">Fibra Óptica Monomodo (FOSMIG) 9 x 125µm 1550nm</option>
-                    </select>
-                </div>
-                <div class="col-md-4">
-                    <label for="backbone-secundario" class="form-label">Quantidade de Backbone por andar</label>
-                    <input type="number" id="quantidadeBackboneSecundario" class="form-control" name="backbone-secundario"
-                        value="1" required>
-                </div>
-                <div class="col-md-4">
-                    <label for="disponivel-secundario" class="form-label">Número de pares de fibra
-                        disponíveis</label>
-                    <input type="text" class="form-control" id="paresFibraDisponiveisSecundario" name="disponivel-secundario"
-                        value="4" required>
                 </div>
             </div>
 

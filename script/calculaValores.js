@@ -9,20 +9,19 @@ document.getElementById('form').addEventListener('submit', function (e) {
     // Coletando os dados de entrada
     let pontosTelecomPavimento = document.getElementById('ptsTelecomPorPavimento').value;
     let PtsVoIPPavimento = document.getElementById('ptsVoIPPorPavimento').value;
+    let PtsCameraPavimento = document.getElementById('ptsCameraPorPavimento').value;
 
-    let quantidadeBackbonePrimario = document.getElementById('quantidadeBackbonePrimario').value;
-    let paresFibras= document.getElementById('paresFibraDisponiveisPrimario').value;
+
+    let quantidadeBackbone = document.getElementById('quantidadeBackbone').value;
+    let paresFibra = document.getElementById('paresFibraDisponiveis').value;
     let distanciaSEQ = document.getElementById('distanciaSEQs').value;
-
     let numPavimentos = document.getElementById('numPavimentos').value;
     let peDireito = document.getElementById('peDireito').value;
-    let quantidadeBackboneSecundario = document.getElementById('quantidadeBackboneSecundario').value;
-    let paresFibraDisponiveisSecundario = document.getElementById('paresFibraDisponiveisSecundario').value;
 
 
     //CABO UTP
     //Cálculo dos pontos de rede
-    if(numPavimentos == 0){
+    if (numPavimentos == 0) {
         numPavimentos = 1;
     }
     let pontosTelecomTotal = pontosTelecomPavimento * numPavimentos;
@@ -52,21 +51,27 @@ document.getElementById('form').addEventListener('submit', function (e) {
     let pachCableAmarelo = 0;
 
     //BACKBONE OPTICO
-    let paresTotal = paresFibraDisponiveisSecundario * quantidadeBackbonePrimario;
-    let tamanhoTotal = (distanciaSEQ * 1.2) * quantidadeBackbonePrimario;
-    let  quantidadeDIO = Math.ceil((paresTotal / 2) / 24) * 2;
-    let bandejaEmendaFibraDio = (Math.ceil((paresTotal * 2) / 12) * 2);
-    let acoplador = paresTotal * 2;
-    let pigTail = paresTotal * 2 * 2;
-    let cordaoOptico = paresTotal * 2;
+    if (PtsVoIPPavimento !=0)paresFibra++;
+    if(PtsCameraPavimento)paresFibra++;
+
+    if(paresFibra<=4){
+        
+    }
 
 
-    //Backbone primario
+    let tamanhoTotal = (distanciaSEQ * 1.2) * quantidadeBackbone;
+    let bandejaEmendaFibraDio = (Math.ceil((paresFibra * 2) / 12) * 2);
+    let acoplador = paresFibra * 2;
+    let pigTail = paresFibra * 2 * 2;
+    let cordaoOptico = paresFibra * 2;
 
 
+    //DIO
+    let qntDio;
+    if(paresFibra <=4) qntDio = 0;
+    else qntDio = Math.ceil((paresFibra*2)/24);
 
-    //Cabo de Fibra Óptica Tight Buffer (FOMMIG) 50 x 125µm - com 8 fibras	
-    let caboFibra = 0;
+
 
     //Chassi DIO com 24 portas - 1U - 19"
     let ChassiDIO = 0;
@@ -76,8 +81,10 @@ document.getElementById('form').addEventListener('submit', function (e) {
     let acopladorSM = 0;
 
     //Terminador óptico para 8 fibras
-    let terminadorOptico = 0;
-    
+    let terminadorOptico;
+    if(paresFibra<=8)terminadorOptico = 1
+    else terminadorOptico = Math.ceil(paresFibra/8);
+
     //Pig tail 50 x 125µm - Conector LC
     let pigTailMMSimples = 0;
     let pigTailMMDuplo = 0;
@@ -89,15 +96,15 @@ document.getElementById('form').addEventListener('submit', function (e) {
 
     //MISCELANEA
     //Etiquetas de identificação
-    let etiquetaPortaPachPanel = pachPanel*24;
-    let etiquetaPortaPachCable = pontosRede*2;
+    let etiquetaPortaPachPanel = pachPanel * 24;
+    let etiquetaPortaPachCable = pontosRede * 2;
     let etiquetaTomadaEspelho = tomadaRj45Femea + espelhos4x4;
-    let etiquetasCabosUTP = pontosRede*2;
+    let etiquetasCabosUTP = pontosRede * 2;
     let etiquetaCordoesPigtail = 0;
     let etiquetaPortaDIO = 0;
 
     //abraçadeira
-        let abracadeiraPlastica = 0;
+    let abracadeiraPlastica = 0;
     let abracadeiraVelcro = 0;
 
     //reguas
@@ -133,6 +140,15 @@ document.getElementById('form').addEventListener('submit', function (e) {
                     <td>${espelhos4x4} unidades</td>
                 </tr>
                 <tr>
+                    <td>Patch Cord cat.6, azul, 3m</td>
+                    <td></td>
+
+                </tr>
+                <tr>
+                    <td>Patch Cord cat.5, branco, 1m</td>
+                    <td></td>
+                </tr>
+                <tr>
                     <td>Patch Panel cat.6, 24 portas</td>
                     <td>${pachPanel} unidades</td>
                 </tr>
@@ -141,12 +157,16 @@ document.getElementById('form').addEventListener('submit', function (e) {
                     <td>${organizadoresFrontais} unidades</td>
                 </tr>
                 <tr> 
-                    <td>Bandeja fixas</td>
+                    <td>Bandeja fixa</td>
                     <td>${bandejas} unidades</td>
                 </tr>
                 <tr>
                     <td>Patch Cable cat.6, azul - 2,5m</td>
                     <td>${patchCableAzul} unidades</td>
+                </tr>
+                <tr>
+                    <td>Patch Cable cat.6, vermelho - 2,5m</td>
+                    <td></td>
                 </tr>
                 <tr>
                     <td>Patch Cable cat.6, amarelo - 2,5m</td>
@@ -167,7 +187,7 @@ document.getElementById('form').addEventListener('submit', function (e) {
                 </tr>
                 <tr>
                     <td>Cabo de Fibra Óptica Tight Buffer (FOMMIG) 50 x 125µm - com 8 fibras</td>
-                    <td>${caboFibra} unidades</td>
+                    <td>${paresFibra} metros</td>
                 </tr>
                 <tr>
                     <td>Chassi DIO com 24 portas - 1U - 19"</td>
@@ -182,7 +202,7 @@ document.getElementById('form').addEventListener('submit', function (e) {
                     <td>${acopladorSM} unidades</td>
                 </tr>
                 <tr>
-                    <td>Bandeja para emenda de fibra no DIO</td>
+                    <td>Bandeja para emenda de fibra no DIO - (comporta até 12 emendas)</td>
                     <td>${bandejaEmendaFibraDio} unidades</td>
                 </tr>
                 <tr>
