@@ -12,7 +12,6 @@ document.getElementById('form').addEventListener('submit', function (e) {
     let PtsCameraPavimento = document.getElementById('ptsCameraPorPavimento').value;
 
 
-    let quantidadeBackbone = document.getElementById('quantidadeBackbone').value;
     let paresFibra = document.getElementById('paresFibraDisponiveis').value;
     let distanciaSEQ = document.getElementById('distanciaSEQs').value;
     let numPavimentos = document.getElementById('numPavimentos').value;
@@ -26,6 +25,7 @@ document.getElementById('form').addEventListener('submit', function (e) {
     }
     let pontosTelecomTotal = pontosTelecomPavimento * numPavimentos;
     let pontosRede = pontosTelecomTotal * 2;
+    let pontosVoIP = PtsVoIPPavimento * numPavimentos;
 
     //Calculo cabo UTP par trançado
     let caixasCaboUtp = Math.ceil((pontosRede * tamParTrancado) / 305);
@@ -47,23 +47,43 @@ document.getElementById('form').addEventListener('submit', function (e) {
     let patchCableAzul = pontosRede;
     let pachCableAmarelo = Math.ceil(pontosRede * 0.5);
 
-    
+
     //Tamanho Rack
     let tamanhoRack = pachPanel + organizadoresFrontais;
-    let quantidadeRack = Math.ceil(tamanhoRack/36)
+    let quantidadeRack = Math.ceil(tamanhoRack / 36)
     let bandejas = quantidadeRack * 2;
     let exaustor = quantidadeRack;
 
     tamanhoRack = (tamanhoRack + bandejas + exaustor) * 1.5;
-    quantidadeRack = Math.ceil(tamanhoRack/36)
+
+    if (tamanhoRack >= 36) {
+        quantidadeRack = Math.ceil(tamanhoRack / 36);
+        tamanhoRack = 36
+    } else if (tamanhoRack < 36 && tamanhoRack > 24) {
+        quantidadeRack = Math.ceil(tamanhoRack / 36);
+        tamanhoRack = 36
+    } else if (tamanhoRack <= 24 && tamanhoRack > 16) {
+        quantidadeRack = Math.ceil(tamanhoRack / 24);
+        tamanhoRack = 24
+    } else if (tamanhoRack <= 16) {
+        quantidadeRack = 1;
+        tamanhoRack = 16;
+    }
 
 
     //BACKBONE OPTICO
-    if (PtsVoIPPavimento !=0)paresFibra++;
-    if(PtsCameraPavimento)paresFibra++;
+    let paresTotal = paresFibra * numPavimentos;
+    let quantidadeCabo = 0;
+
+    for(let i = 1; i<=numPavimentos;i++){
+        quantidadeCabo += peDireito*(i+1)
+    }
+
+    quantidadeCabo = Math.ceil(quantidadeCabo/8)*8;
+
 
     //DIO
-    let qntDio = Math.ceil(numPavimentos/2);
+    let qntDio = Math.ceil((paresTotal / 2) / 24)
     let caixasEmenda = qntDio * 2;
 
 
@@ -77,18 +97,19 @@ document.getElementById('form').addEventListener('submit', function (e) {
 
     //Terminador óptico para 8 fibras
     let terminadorOptico;
-    if(paresFibra<=8)terminadorOptico = 1
-    else terminadorOptico = Math.ceil(paresFibra/8);
+    if (paresFibra <= 8) terminadorOptico = 1
+    else terminadorOptico = Math.ceil(paresFibra / 8);
 
     //Pig tail 50 x 125µm - Conector LC
-    let pigTailMMSimples = paresFibra * numPavimentos;
+    let pigTailMMSimples = paresTotal * 2;
+    let pigTailDuplo = terminadorOptico / 2;
 
     //Cordão óptico 50 x 125µm - 3m - duplo -conector LC
     let cordaoOptico = paresFibra * 2; // Dois cordões por par de fibra
 
     //outros
     let capacidadeBandeja = 12; // Capacidade da bandeja de emenda
-    let bandejaEmendaFibraDio = Math.ceil(paresFibra / capacidadeBandeja);
+    let bandejaEmendaFibraDio = Math.ceil((paresTotal * 2) / capacidadeBandeja)
 
 
     //MISCELANEA
@@ -97,13 +118,12 @@ document.getElementById('form').addEventListener('submit', function (e) {
     let etiquetaPortaPachCable = pontosRede * 2;
     let etiquetaTomadaEspelho = tomadaRj45Femea + espelhos4x4;
     let etiquetasCabosUTP = pontosRede * 2;
-    let etiquetaCordoesPigtail = pigTailMMSimples; 
+    let etiquetaCordoesPigtail = pigTailMMSimples;
     let etiquetaPortaDIO = qntDio * 24; // Supondo que cada DIO tenha 24 portas
 
     //abraçadeira
     let abracadeiraPlastica = pontosRede;
     let abracadeiraVelcro = pontosRede;
-
 
     //reguas
     let regua6Tomadas = Math.ceil(pontosRede / 6); // Uma régua para cada 6 pontos de rede
@@ -177,7 +197,7 @@ document.getElementById('form').addEventListener('submit', function (e) {
                 </tr>
                 <tr>
                     <td>Cabo de Fibra Óptica Tight Buffer (FOMMIG) 50 x 125µm - com 8 fibras</td>
-                    <td>${paresFibra} metros</td>
+                    <td>${quantidadeCabo} metros</td>
                 </tr>
                 <tr>
                     <td>Chassi DIO com 24 portas - 1U - 19"</td>
